@@ -7,6 +7,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\custom_module\Services\TimezoneInterface;
+use Drupal\Core\Config\ConfigFactoryInterface;
 
 /**
  * Provides a 'Timezone' Block.
@@ -23,15 +24,22 @@ class TimezoneBlock extends BlockBase implements ContainerFactoryPluginInterface
    */
   protected $timeZone;
 
+  /*
+   * @var \Drupal\Core\Config\ConfigFactoryInterface $configfactory
+   */
+  protected $configfactory;
+
   /**
    * @param array $configuration
    * @param string $plugin_id
    * @param mixed $plugin_definition
    * @param \Drupal\custom_module\Services\TimezoneInterface $timeZone
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configfactory
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition,TimezoneInterface $timeZone) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, TimezoneInterface $timeZone, ConfigFactoryInterface $configfactory) {    
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->timeZone = $timeZone;
+    $this->configfactory = $configfactory;    
   }
 
   /**
@@ -47,7 +55,8 @@ class TimezoneBlock extends BlockBase implements ContainerFactoryPluginInterface
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('custom_module.timezone_services')
+      $container->get('custom_module.timezone_services'),
+      $container->get('config.factory')
     );
   }
 
@@ -55,8 +64,8 @@ class TimezoneBlock extends BlockBase implements ContainerFactoryPluginInterface
    * {@inheritdoc}
    */
   public function build() {    
-    $current_time = $this->timeZone->getTimeByTimezone();    
-    $timezoneSettings = \Drupal::config('custom.adminsettings');     
+    $current_time = $this->timeZone->getTimeByTimezone();
+    $timezoneSettings = $this->configfactory->get('custom.adminsettings');   
     $country = $timezoneSettings->get('country');
     $city = $timezoneSettings->get('city');
     return [      
