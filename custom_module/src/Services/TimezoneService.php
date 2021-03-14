@@ -27,9 +27,9 @@ class TimezoneService  implements TimezoneInterface {
    * Constructs Timezone
    * 
    * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory 
+   *   The date formatter.
    */
-  public function __construct(DateFormatterInterface $date_formatter, ConfigFactoryInterface $configFactory) {
+  public function __construct(DateFormatterInterface $date_formatter,ConfigFactoryInterface $configFactory) {
     $this->dateFormatter = $date_formatter;
     $this->configFactory = $configFactory;
   }
