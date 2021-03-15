@@ -1,7 +1,7 @@
 services:
   custom_module.timezone_services:
     class: Drupal\custom_module\Services\TimezoneService
-    arguments: ['@date.formatter']
+    arguments: ['@date.formatter','@config.factory']
     tags:
       - { name: backend_overridable}
 
